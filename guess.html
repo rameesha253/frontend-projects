@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guess The Number</title>
+<link rel="stylesheet" href="guess.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Guess The Number</h1>
+    <p id="rangeText">Guess a number between 1 and 10</p>
+    <p id="attempts">Attempts left: 3</p>
+
+    <input type="number" id="guessInput" placeholder="Enter number">
+    <br>
+    <button onclick="checkGuess()">Guess</button>
+    <button id="restart" onclick="restartGame()">Restart</button>
+
+    <div id="message"></div>
+</div>
+
+<script>
+let min = 1;
+let max = 10;
+let attempts = 3;
+let randomNumber = generateNumber();
+
+function generateNumber(){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function checkGuess(){
+    let input = document.getElementById("guessInput");
+    let userGuess = Number(input.value);
+    let message = document.getElementById("message");
+    let container = document.querySelector(".container");
+
+    if(attempts <= 0) return;
+
+    if(userGuess === randomNumber){
+        message.innerHTML = "🎉 Correct! Level Up!";
+        container.classList.add("pop");
+
+        // Level 2
+        min = 1;
+        max = 50;
+        attempts = 5;
+        randomNumber = generateNumber();
+
+        document.getElementById("rangeText").innerHTML =
+            "Level 2! Guess between 1 and 50";
+    }
+    else if(userGuess > randomNumber){
+        message.innerHTML = "📈 Too High!";
+        container.classList.add("shake");
+        attempts--;
+    }
+    else{
+        message.innerHTML = "📉 Too Low!";
+        container.classList.add("shake");
+        attempts--;
+    }
+
+    document.getElementById("attempts").innerHTML =
+        "Attempts left: " + attempts;
+
+    if(attempts === 0){
+        message.innerHTML = "😢 Game Over! Number was " + randomNumber;
+    }
+
+    setTimeout(()=>{
+        container.classList.remove("shake");
+        container.classList.remove("pop");
+    },400);
+
+    input.value="";
+}
+
+function restartGame(){
+    min = 1;
+    max = 10;
+    attempts = 3;
+    randomNumber = generateNumber();
+
+    document.getElementById("rangeText").innerHTML =
+        "Guess a number between 1 and 10";
+    document.getElementById("attempts").innerHTML =
+        "Attempts left: 3";
+    document.getElementById("message").innerHTML = "";
+}
+</script>
+
+</body>
+</html>
