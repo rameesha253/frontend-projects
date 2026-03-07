@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Galaxy Memory Matching Game</title>
+    <link rel="stylesheet" href="memory-matching.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let symbols = ["🌙", "⭐", "🪐", "🌍", "🚀", "🌞", "🌌", "☄️"];
+            let firstCard = null;
+            let secondCard = null;
+            let lockBoard = false;
+            let moves = 0;
+            let matched = 0;
+            let timer = 60;
+            let timerInterval;
+            let gameStarted = false;
+
+            function startGame() {
+                $("#gameBoard").empty();
+                $("#message").hide();
+                moves = 0;
+                matched = 0;
+                $("#moves").text(moves);
+                timer = 60;
+                $("#timer").text(timer);
+                let cards = symbols.concat(symbols);
+                cards.sort(() => 0.5 - Math.random());
+                cards.forEach(symbol => {
+                    $("#gameBoard").append(
+                        `<div class="card" data-symbol="${symbol}">
+                            <div class="front">${symbol}</div>
+                            <div class="back">🌠</div>
+                        </div>`
+                    );
+                });
+            }
+
+            function startTimer() {
+                timerInterval = setInterval(function () {
+                    timer--;
+                    $("#timer").text(timer);
+                    if (timer === 0) {
+                        clearInterval(timerInterval);
+                        endGame("⏰ Time Over! You Lost!");
+                    }
+                }, 1000);
+            }
+
+            $(document).on("click", ".card", function () {
+                if (!gameStarted) return;
+                if (lockBoard) return;
+                if ($(this).hasClass("flipped")) return;
+                $(this).addClass("flipped");
+                if (!firstCard) {
+                    firstCard = $(this);
+                    return;
+                }
+                secondCard = $(this);
+                moves++;
+                $("#moves").text(moves);
+                checkMatch();
+            });
+
+            function checkMatch() {
+                let s1 = firstCard.data("symbol");
+                let s2 = secondCard.data("symbol");
+                if (s1 === s2) {
+                    document.getElementById("matchSound").play();
+                    matched++;
+                    firstCard = null;
+                    secondCard = null;
+                    if (matched === symbols.length) {
+                        clearInterval(timerInterval);
+                        endGame("🎉 Congratulations! You Won!");
+                    }
+                } else {
+                    lockBoard = true;
+                    document.getElementById("wrongSound").play();
+                    setTimeout(function () {
+                        firstCard.removeClass("flipped");
+                        secondCard.removeClass("flipped");
+                        firstCard = null;
+                        secondCard = null;
+                        lockBoard = false;
+                    }, 1000);
+                }
+            }
+
+            function endGame(text) {
+                $("#message").text(text).fadeIn();
+                gameStarted = false;
+                clearInterval(timerInterval);
+            }
+
+            $("#startBtn").click(function () {
+                gameStarted = true;
+                firstCard = null;
+                secondCard = null;
+                lockBoard = false;
+                startGame();
+                startTimer();
+            });
+
+            $("#restartBtn").click(function () {
+                gameStarted = true;
+                firstCard = null;
+                secondCard = null;
+                lockBoard = false;
+                clearInterval(timerInterval);
+                startGame();
+                startTimer();
+            });
+
+            $("#stopBtn").click(function () {
+                clearInterval(timerInterval);
+                endGame("⏸ Game Stopped!");
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="gameHeader">
+        <h1>🌌 Galaxy Memory Match</h1>
+        <p>Moves: <span id="moves">0</span></p>
+        <p>Time Left: <span id="timer">60</span> seconds</p>
+        <button id="restartBtn">🔄 Restart Game</button>
+    </div>
+    <div id="gameBoard"></div>
+    <div id="gameControls">
+        <button id="startBtn">▶ Start Game</button>
+        <button id="stopBtn">⏹ Stop Game</button>
+    </div>
+    <div id="message"></div>
+    <audio id="matchSound" src="correct.wav"></audio>
+    <audio id="wrongSound" src="wrong.wav"></audio>
+</body>
+</html>

@@ -1,0 +1,130 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: white;
+    background: radial-gradient(circle, #283a72, #020718);
+    min-height: 100vh;
+}
+
+h1 {
+    margin-top: 20px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #6dd5fa;
+}
+
+#gameHeader {
+    margin-bottom: 20px;
+}
+
+#restartBtn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #a19bc5, #706e87);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#restartBtn:hover {
+    transform: scale(1.05);
+}
+
+#gameControls {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+#startBtn,
+#stopBtn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #a19bc5, #706e87);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#startBtn:hover,
+#stopBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(161, 155, 197, 0.6);
+}
+
+#gameBoard {
+    width: 420px;
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.card {
+    width: 90px;
+    height: 90px;
+    position: relative;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.card:hover {
+    transform: scale(1.07);
+    box-shadow: 0 0 15px #6dd5fa;
+    border-radius: 12px;
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+.front,
+.back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 38px;
+    border-radius: 12px;
+    backface-visibility: hidden;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.front {
+    background: linear-gradient(45deg, #b6ceef, #b9bcbea6);
+    transform: rotateY(180deg);
+}
+
+.back {
+    background: linear-gradient(45deg,
+            #091e3a, #32537e);
+    font-size: 28px;
+}
+
+#message {
+    margin-top: 25px;
+    font-size: 26px;
+    font-weight: bold;
+    display: none;
+    animation: glow 1.5s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px white;
+    }
+
+    to {
+        text-shadow: 0 0 25px #00f2ff;
+    }
+}
